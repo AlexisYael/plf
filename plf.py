@@ -9,7 +9,7 @@ class PLF:
 
         args = sys.argv
 
-        validActions = ['minimizar']
+        validActions = ["minimizar", "afd"]
 
         if (len(args) < 2) or (args[1] not in validActions):
             print "Tienes que ingresar una accion valida."
@@ -18,7 +18,10 @@ class PLF:
         action = args[1]
 
         if action == "minimizar":
-            return self.minimizar(args)
+            return self._minimizar(args)
+
+        if action == "afd":
+            return self._toAFD(args)
 
     def _loadFromFile(self, af, filename):
         if not os.path.isfile(filename):
@@ -31,7 +34,7 @@ class PLF:
             line = line.rstrip()
             data = line.split()
 
-            if len(data) > 2:
+            if len(data) > 1:
                 nodeName = data[0]
                 final = True if data[1] == "S" else False
 
@@ -61,7 +64,7 @@ class PLF:
 
         f.close()
 
-    def minimizar(self, args):
+    def _minimizar(self, args):
         if (len(args) < 4):
             print "El uso del programa debe ser: %s %s <archivo de datos> <archivo de resultado>" % (args[0], args[1])
             sys.exit()
@@ -72,11 +75,37 @@ class PLF:
         af = AF()
 
         self._loadFromFile(af, dataFile)
-
+        print af
         af.minimize()
 
         self._writeOnFile(af, resultFile)
 
         print "Minimizacion terminada correctamente, el AFD de resultado esta en: %s" % (resultFile)
+
+    def _toAFD(self, args):
+        if (len(args) < 4):
+            print "El uso del programa debe ser: %s %s <archivo de datos> <archivo de resultado> [minimo]" % (args[0], args[1])
+            sys.exit()
+
+        dataFile = args[2]
+        resultFile = args[3]
+
+        af = AF()
+
+        self._loadFromFile(af, dataFile)
+
+        af = af.toAFD()
+
+        minimize = False
+        if(len(args) > 4 and args[4] == "minimo"):
+            minimize = True
+
+        if minimize:
+            af.minimize()
+        print af
+        self._writeOnFile(af, resultFile)
+
+        print "Paso a AFD %sterminado correctamente, el AFD de resultado esta en: %s" % ("minimo " if minimize else "", resultFile)
+
 
 PLF()

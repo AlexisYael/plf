@@ -14,6 +14,15 @@ class Node:
         if not destination in self.transitions[symbol]:
             self.transitions[symbol].append(destination)
 
+    def getTransition(self, symbol):
+        if symbol in self.transitions:
+            return self.transitions[symbol]
+        else:
+            return []
+
+    def removeTransition(self, symbol):
+        del self.transitions[symbol]
+
     def getName(self):
         return self.name
 
