@@ -122,7 +122,7 @@ class AF:
                     # en el primer caso es a la transicion completa del simbolo
                     lastNode = transition
 
-                    # Seteamos una variable con el nombre del ultmo nodo temporal credo 
+                    # Seteamos una variable con el nombre del ultmo nodo temporal creado
                     # para usarlo en la transicion del nodo inicial
                     tempNodeName = None
 
