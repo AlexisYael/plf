@@ -1,5 +1,6 @@
 import collections
 from node import Node
+import sys
 
 
 class AF:
@@ -174,6 +175,9 @@ class AF:
                 groupByName[node.getName()] = groupID
 
             self._minimize(groups, groupByName)
+        else:
+            print "No se puede minimizar un AFND, para esto debe ejecutar %s afd %s %s minimo" % (sys.argv[0], sys.argv[2], sys.argv[3])
+            sys.exit()
 
     def _minimize(self, groups, groupByName):
         nextGroupID = 1

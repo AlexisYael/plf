@@ -75,7 +75,7 @@ class PLF:
         af = AF()
 
         self._loadFromFile(af, dataFile)
-        print af
+
         af.minimize()
 
         self._writeOnFile(af, resultFile)
@@ -102,7 +102,7 @@ class PLF:
 
         if minimize:
             af.minimize()
-        print af
+
         self._writeOnFile(af, resultFile)
 
         print "Paso a AFD %sterminado correctamente, el AFD de resultado esta en: %s" % ("minimo " if minimize else "", resultFile)
