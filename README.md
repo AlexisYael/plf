@@ -39,3 +39,6 @@ En el repositorio se encuentran 2 archivos de datos:
 * data2.txt: AFND con 17 nodos. Incluye transiciones vacías.
 
 Los archivos de resultado se escriben con el mismo formato indicado.
+
+### Repositorio
+Repositorio hosteado en [github](https://github.com/jpverdejo/plf)
