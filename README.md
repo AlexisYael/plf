@@ -22,6 +22,8 @@ Los AF se escriben en archivos de texto con las siguientes caracteristicas:
   * Segundo parametro: Nodo final. Identifica si e nodo es final con una "S" si lo es o una "N" en caso contrario.
   * Siguientes parametros: Transiciones. Las transiciones se definen como ```simbolo:nodo```, sin espacios. El simbolo "E" se usa para la palabra vacía.
 
+####_*IMPORTANTE*_: El primer nodo del archivo se asumirá como el nodo inicial.
+
 Ejemplo de AF en archivo:
 <pre>A S 0:A 1:B
 B N 0:B 1:C
