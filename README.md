@@ -1,6 +1,11 @@
 # Manejo de Automatas Finitos
 ###### Procesamiento de Lenguajes Formales - USACH 2013
 
+### Integrantes
+* Valentino Carmona
+* Eric Pérez
+* Juan Pablo Verdejo
+
 ### Requisitos
 * El programa está escrito en Python 2.7
 * Fue probado en OSX Mountain Lion y en Ubuntu 10.04
