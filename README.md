@@ -22,7 +22,7 @@
 * Validar secuencia
   * Esta funcion valida una secuencia dado un AF
     * ```python plf.py validar <archivo de datos> [secuencia] (Si no se pasa una secuencia se analiza la palabra vacia) ```.
-    * Por ejemplo: ```python plf.py afd data.txt 101```
+    * Por ejemplo: ```python plf.py validar data.txt 101```
     
 ### Formato de archivos
 Los AF se escriben en archivos de texto con las siguientes caracteristicas:
