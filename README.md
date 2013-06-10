@@ -19,6 +19,10 @@
   * Esta funcion transforma un AFND leído desde un archivo y lo guarda en otro, además da la opción de minimizar el resultado automaticamente
     * ```python plf.py afd <archivo de datos> <archivo de resultado> [minimo]```.
     * Por ejemplo: ```python plf.py afd data2.txt resultado.txt minimo```
+* Validar secuencia
+  * Esta funcion valida una secuencia dado un AF
+    * ```python plf.py validar <archivo de datos> [secuencia] (Si no se pasa una secuencia se analiza la palabra vacia) ```.
+    * Por ejemplo: ```python plf.py afd data.txt 101```
     
 ### Formato de archivos
 Los AF se escriben en archivos de texto con las siguientes caracteristicas:
