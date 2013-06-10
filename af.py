@@ -7,14 +7,21 @@ class AF:
     def __init__(self):
         self.nodes = collections.OrderedDict()
         self.symbols = []
+        self.first = None
 
     def getNodes(self):
         return self.nodes
+
+    def getFirst(self):
+        return self.first
 
     # Metodo que agrega un nodo al AF
     def addNode(self, node):
         # Agregamos el nodo al AF usando el nombre del nodo como llave
         self.nodes[node.getName()] = node
+        # Si es el primer nodo guardamos el nombre en self.first
+        if self.first is None:
+            self.first = node.getName()
         # Actualizamos el listado de simbolos validos
         self.updateSymbols()
 
@@ -356,6 +363,41 @@ class AF:
                         # Y reemplazamos la transicion en todos los nodos del AFD
                         for nodeName, node in self.nodes.iteritems():
                             node.replaceTransition(validNode.getName(), duplicatedNode.getName())
+
+    # Metodo que valida una secuencia para el Automata Finito
+    def validateSecuence(self, secuence):
+        # Para evitar tener que recorrer un arbol con mas de una rama valida
+        # nos aseguramos que trabajaremos sobre un AFD
+        afd = self.toAFD()
+        # Llamamos al metodo de analisis recursivo entregando el nombre
+        # del nodo inicial del AFD y la secuencia
+        start = afd.getFirst()
+        return afd.doValidateSecuence(secuence, start)
+
+    # Metodo que analiza recursivamente si una secuencia pertenece a un AFD
+    # partiendo desde un nodo dado
+    def doValidateSecuence(self, secuence, start):
+        # Verificamos que estamos trabajando sobre un AFD
+        if self.isAFD():
+            # Si el largo es 0 significa que estamos en el fin de la recusion
+            # por lo que solo analizamos si el nodo "actual" es un estado final
+            if len(secuence) == 0:
+                return self.nodes[start].isFinal()
+
+            # Sacamos el valor del proximo simbolo a analizar
+            nextSymbol = secuence[0]
+
+            # Buscamos la transicion del AFD para el siguiente simbolo
+            transitions = self.nodes[start].getTransition(nextSymbol)
+
+            # Si tiene transicion obtenemos el nombre del siguiente nodo
+            if len(transitions) > 0:
+                nextStart = transitions[0]
+
+                # Llamamos al metodo de analisis recursivo con el resto de la palabra (sin el
+                # simbolo que acabamos de analizar) y el siguiente nodo
+                return self.doValidateSecuence(secuence[1:], nextStart)
+        return False
 
     def __repr__(self):
         return "<AF symbols: '%s', nodes: '\n%s'>" % (self.symbols, self.nodes)

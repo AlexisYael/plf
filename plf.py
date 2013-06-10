@@ -9,7 +9,7 @@ class PLF:
 
         args = sys.argv
 
-        validActions = ["minimizar", "afd"]
+        validActions = ["minimizar", "afd", "validar"]
 
         if (len(args) < 2) or (args[1] not in validActions):
             print "Tienes que ingresar una accion valida."
@@ -22,6 +22,9 @@ class PLF:
 
         if action == "afd":
             return self._toAFD(args)
+
+        if action == "validar":
+            return self._validar(args)
 
     # Metodo que carga un AF desde un archivo
     def _loadFromFile(self, af, filename):
@@ -145,6 +148,37 @@ class PLF:
         self._writeOnFile(af, resultFile)
 
         print "Paso a AFD %sterminado correctamente, el AFD de resultado esta en: %s" % ("minimo " if minimize else "", resultFile)
+
+    # Metodo que valida si una secuencia es valida segun un AF dado
+    def _validar(self, args):
+        # Verificamos que tenemos todos los parametros necesarios
+        if (len(args) < 3):
+            print "El uso del programa debe ser: %s %s <archivo de datos> [secuencia] (Si no se pasa secuencia se analizara la palabra vacia)" % (args[0], args[1])
+            sys.exit()
+
+        # Cargamos el nombre del archivo con el AF
+        dataFile = args[2]
+
+        # Verificamos si el parametro "secuence" fue pasado, en caso contrario
+        # validaremos un string vacio
+        secuence = ""
+        if len(args) > 3:
+            secuence = args[3]
+
+        # Instanciamos un AF
+        af = AF()
+
+        # Cargamos el AF desde el archivo
+        self._loadFromFile(af, dataFile)
+
+        # Ejecutamos la validacion
+        isValid = af.validateSecuence(secuence)
+
+        # Imprimimos el resultado
+        if isValid:
+            print "La secuencia '%s' es valida segun el AF determinado en %s" % (secuence, dataFile)
+        else:
+            print "La secuencia '%s' NO es valida segun el AF determinado en %s" % (secuence, dataFile)
 
 # Iniciamos la ejecucion del software
 PLF()
