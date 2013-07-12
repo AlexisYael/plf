@@ -9,7 +9,7 @@ class PLF:
 
         args = sys.argv
 
-        validActions = ["minimizar", "afd", "validar"]
+        validActions = ["minimizar", "afd", "validar", "complemento"]
 
         if (len(args) < 2) or (args[1] not in validActions):
             print "Tienes que ingresar una accion valida."
@@ -25,6 +25,9 @@ class PLF:
 
         if action == "validar":
             return self._validar(args)
+
+        if action == "complemento":
+            return self._complemento(args)
 
     # Metodo que carga un AF desde un archivo
     def _loadFromFile(self, af, filename):
@@ -179,6 +182,33 @@ class PLF:
             print "La secuencia '%s' es valida segun el AF determinado en %s" % (secuence, dataFile)
         else:
             print "La secuencia '%s' NO es valida segun el AF determinado en %s" % (secuence, dataFile)
+
+    # Metodo que lanza el proceso de complementacion de un AF
+    def _complemento(self, args):
+        # Verificamos que tenemos todos los parametros necesarios
+        if (len(args) < 4):
+            print "El uso del programa debe ser: %s %s <archivo de datos> <archivo de resultado>" % (args[0], args[1])
+            sys.exit()
+
+        dataFile = args[2]
+        resultFile = args[3]
+
+        # Instanciamos un AF
+        af = AF()
+
+        # Cargamos el AF desde un archivo
+        self._loadFromFile(af, dataFile)
+
+        # Ejecutamos el metodo que transforma el AFND a AFD
+        af = af.toAFD()
+
+        # Complementamos el AFD
+        af.complement()
+
+        # Escribimos el AFD en un archivo
+        self._writeOnFile(af, resultFile)
+
+        print "Paso a AFD complementado correctamente, el AFD de resultado esta en: %s" % (resultFile)
 
 # Iniciamos la ejecucion del software
 PLF()
