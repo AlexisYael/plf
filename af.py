@@ -399,5 +399,16 @@ class AF:
                 return self.doValidateSecuence(secuence[1:], nextStart)
         return False
 
+
+    # Metodo para complementar un AFD
+    def complement(self):
+        # Verificamos que estamos trabajando sobre un AFD
+        if self.isAFD():
+            for nodeName, node in self.nodes.iteritems():
+                node.setFinal(not node.isFinal())
+            return True
+
+        return False
+
     def __repr__(self):
         return "<AF symbols: '%s', nodes: '\n%s'>" % (self.symbols, self.nodes)
