@@ -410,5 +410,21 @@ class AF:
 
         return False
 
+    # Metodo para concatenar otro AF al actual
+    def concat(self, af):
+        currentNodes = self.getNodes()
+        extraNodes = af.getNodes()
+
+        nodesCounter = 1
+
+        # Renombramos los nodos del nuevo AF que existen en el primero
+        for nodeName, node in extraNodes.iteritems():
+            if nodeName in currentNodes.keys():
+                while "Q" + str(nodesCounter) in currentNodes.keys():
+                    nodesCounter++
+
+                #TODO node.
+
+
     def __repr__(self):
         return "<AF symbols: '%s', nodes: '\n%s'>" % (self.symbols, self.nodes)

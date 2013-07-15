@@ -47,6 +47,10 @@ class Node:
     def setFinal(self, isFinal):
         self.final = isFinal
 
+    # Metodo que setea si el nodo es final
+    def setName(self, name):
+        self.name = name #TODO
+
     # Metodo que reemplaza un nodo por otro en las transiciones
     def replaceTransition(self, validNode, duplicatedNode):
         # Iteramos sobre las transiciones
