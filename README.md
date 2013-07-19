@@ -23,6 +23,38 @@
   * Esta funcion valida una secuencia dado un AF
     * ```python plf.py validar <archivo de datos> [secuencia] (Si no se pasa una secuencia se analiza la palabra vacia) ```.
     * Por ejemplo: ```python plf.py validar data.txt 101```
+* Complementar AFD
+  * Esta funcion complementa un AF
+    * ```python plf.py complemento <archivo de datos> <archivo de resultado> ```.
+    * Por ejemplo: ```python plf.py complemento data.txt resultado.txt```
+* "Potenciar" AFD
+  * Esta funcion potencia a "n" un AF
+    * ```python plf.py potencia <archivo de datos> <archivo de resultado> <potencia [entero]>```.
+    * Por ejemplo: ```python plf.py potencia data.txt resultado.txt 3```
+* Estrella de kleene a AF
+  * Esta funcion aplica la funcion estrella de kleene a un AF
+    * ```python plf.py kleene <archivo de datos> <archivo de resultado> ```.
+    * Por ejemplo: ```python plf.py kleene data.txt resultado.txt```
+* Aceptar palabra vacia
+  * Esta funcion permite que el AF acepte la palabra vacia, es decir AF U {<palabra vacia>}
+    * ```python plf.py aceptarVacia <archivo de datos> <archivo de resultado> ```.
+    * Por ejemplo: ```python plf.py aceptarVacia data.txt resultado.txt```
+* NO aceptar palabra vacia
+  * Esta funcion elimina la aceptacion de la palabra vacia en un AF, es decir AF - {<palabra vacia>}
+    * ```python plf.py aceptarVacia <archivo de datos> <archivo de resultado> ```.
+    * Por ejemplo: ```python plf.py aceptarVacia data.txt resultado.txt```
+* Union de AFs
+  * Esta funcion une 2 AFs
+    * ```python plf.py union <archivo de datos 1> <archivo de datos 2> <archivo de resultado> ```.
+    * Por ejemplo: ```python plf.py union data.txt data2.txt resultado.txt```
+* Concatenacion de AFs
+  * Esta funcion concatena 2 AFs
+    * ```python plf.py concatenacion <archivo de datos 1> <archivo de datos 2> <archivo de resultado> ```.
+    * Por ejemplo: ```python plf.py concatenacion data.txt data2.txt resultado.txt```
+* Interseccion de AFs
+  * Esta funcion intersecta 2 AFs
+    * ```python plf.py interseccion <archivo de datos 1> <archivo de datos 2> <archivo de resultado> ```.
+    * Por ejemplo: ```python plf.py interseccion data.txt data2.txt resultado.txt```
     
 ### Formato de archivos
 Los AF se escriben en archivos de texto con las siguientes caracteristicas:

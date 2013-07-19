@@ -49,7 +49,7 @@ class Node:
 
     # Metodo que setea si el nodo es final
     def setName(self, name):
-        self.name = name #TODO
+        self.name = name
 
     # Metodo que reemplaza un nodo por otro en las transiciones
     def replaceTransition(self, validNode, duplicatedNode):
@@ -61,4 +61,4 @@ class Node:
                     transition[index] = validNode
 
     def __repr__(self):
-        return "<Node name='%s', isFinal='%s', transitions='%s'>\n" % (self.name, self.final, self.transitions)
+        return "<Node id='%s', name='%s', isFinal='%s', transitions='%s'>\n" % (hex(id(self)), self.name, self.final, self.transitions)

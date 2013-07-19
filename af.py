@@ -1,6 +1,7 @@
 import collections
 from node import Node
 import sys
+import copy
 
 
 class AF:
@@ -399,7 +400,6 @@ class AF:
                 return self.doValidateSecuence(secuence[1:], nextStart)
         return False
 
-
     # Metodo para complementar un AFD
     def complement(self):
         # Verificamos que estamos trabajando sobre un AFD
@@ -412,19 +412,184 @@ class AF:
 
     # Metodo para concatenar otro AF al actual
     def concat(self, af):
-        currentNodes = self.getNodes()
+        currentNodes = copy.copy(self.getNodes().keys())
         extraNodes = af.getNodes()
 
         nodesCounter = 1
 
+        renames = {}
+
         # Renombramos los nodos del nuevo AF que existen en el primero
         for nodeName, node in extraNodes.iteritems():
-            if nodeName in currentNodes.keys():
-                while "Q" + str(nodesCounter) in currentNodes.keys():
-                    nodesCounter++
+            if nodeName in currentNodes:
+                newNodeName = "Q" + str(nodesCounter)
 
-                #TODO node.
+                while newNodeName in currentNodes:
+                    nodesCounter += 1
+                    newNodeName = "Q" + str(nodesCounter)
 
+                renames[nodeName] = newNodeName
+                node.setName(newNodeName)
+                nodesCounter += 1
+
+        for oldNodeName, newNodeName in renames.iteritems():
+            for nodeName, node in extraNodes.iteritems():
+                node.replaceTransition(newNodeName, oldNodeName)
+
+        firstNode = af.getFirst()
+
+        if renames.has_key(firstNode):
+            firstNode = renames[firstNode]
+
+        for nodeName, node in extraNodes.iteritems():
+            self.addNode(node)
+
+        for nodeName in currentNodes:
+            node = self.nodes[nodeName]
+            if node.isFinal():
+                node.addTransition("E", firstNode)
+                node.setFinal(False)
+
+    def kleene(self):
+        first = self.getFirst()
+
+        # Buscamos un nombre valido para el nuevo nodo
+        nodesCounter = 0
+        newNodeName = "Q" + str(nodesCounter)
+
+        while self.nodes.has_key(newNodeName):
+            nodesCounter += 1
+            newNodeName = "Q" + str(nodesCounter)
+
+        # Seteamos el nuevo nodo como final y agregamos la transicion al inicial actual
+        node = Node(newNodeName, True)
+        node.addTransition("E", first)
+
+        # Reiniciamos el listado de nodos (No podemos agregar una entrada al inicio en un orderecDict)
+        newNodes = collections.OrderedDict()
+
+        # Agregamos el nodo al AF usando el nombre del nodo como llave
+        newNodes[node.getName()] = node
+        self.first = node.getName()
+
+        # Agregamos el resto de los elementos al nuevo listado de nodos
+        for nodeName, node in self.nodes.iteritems():
+            newNodes[nodeName] = node
+
+            # Si es final agregamos la transicion vacia al nodo inicial
+            if node.isFinal():
+                node.addTransition("E", first)
+
+        # Reemplazamos el listado de nodos
+        self.nodes = newNodes
+
+    # Metodo que se asegura que el primero nodo es final, para aceptar la palabra vacia
+    def aceptarVacia(self):
+        # Verificamos que el AFD no acepta una palabra vacia
+        if not self.validateSecuence(""):
+            self.nodes[self.getFirst()].setFinal(True)
+
+    # Metodo que evita que el AFD acepte la palabra vacia
+    def noAceptarVacia(self):
+        # Verificamos que el AFD acepta una palabra vacia
+        if self.validateSecuence(""):
+            # Transiciones que tenemos que agregar al nuevo nodo inicial
+            transitions = self.nodes[self.getFirst()].getTransitions()
+
+            # Buscamos un nombre valido para el nuevo nodo
+            nodesCounter = 0
+            newNodeName = "Q" + str(nodesCounter)
+
+            while self.nodes.has_key(newNodeName):
+                nodesCounter += 1
+                newNodeName = "Q" + str(nodesCounter)
+
+            # Seteamos el nuevo nodo como final y agregamos la transicion al inicial actual
+            node = Node(newNodeName, True)
+            for symbol, transitionsToAdd in transitions.iteritems():
+                for destination in transitionsToAdd:
+                    node.addTransition(symbol, destination)
+
+            # Reiniciamos el listado de nodos (No podemos agregar una entrada al inicio en un orderecDict)
+            newNodes = collections.OrderedDict()
+
+            # Agregamos el nodo al AF usando el nombre del nodo como llave
+            newNodes[node.getName()] = node
+            self.first = node.getName()
+
+            # Agregamos el resto de los elementos al nuevo listado de nodos
+            for nodeName, node in self.nodes.iteritems():
+                newNodes[nodeName] = node
+
+            # Reemplazamos el listado de nodos
+            self.nodes = newNodes
+
+    # Metodo que une el AF a otro
+    def union(self, af):
+        currentNodes = copy.copy(self.getNodes().keys())
+        extraNodes = af.getNodes()
+
+        nodesCounter = 1
+
+        renames = {}
+
+        # Renombramos los nodos del nuevo AF que existen en el primero
+        for nodeName, node in extraNodes.iteritems():
+            if nodeName in currentNodes:
+                newNodeName = "Q" + str(nodesCounter)
+
+                while newNodeName in currentNodes:
+                    nodesCounter += 1
+                    newNodeName = "Q" + str(nodesCounter)
+
+                renames[nodeName] = newNodeName
+                node.setName(newNodeName)
+                nodesCounter += 1
+
+        for oldNodeName, newNodeName in renames.iteritems():
+            for nodeName, node in extraNodes.iteritems():
+                node.replaceTransition(newNodeName, oldNodeName)
+
+        firstNodeAF = af.getFirst()
+
+        if renames.has_key(firstNodeAF):
+            firstNodeAF = renames[firstNodeAF]
+
+        # Buscamos un nombre valido para el nuevo nodo
+        newNodeName = "Q" + str(nodesCounter)
+
+        while self.nodes.has_key(newNodeName) or renames.has_key(newNodeName):
+            nodesCounter += 1
+            newNodeName = "Q" + str(nodesCounter)
+
+        # Seteamos el nuevo nodo como no-final y agregamos la transicion al inicial de cada AF
+        node = Node(newNodeName, False)
+        node.addTransition("E", self.getFirst())
+        node.addTransition("E", firstNodeAF)
+
+        # Reiniciamos el listado de nodos (No podemos agregar una entrada al inicio en un orderecDict)
+        newNodes = collections.OrderedDict()
+
+        # Agregamos el nodo al AF usando el nombre del nodo como llave
+        newNodes[node.getName()] = node
+        self.first = node.getName()
+
+        # Agregamos los elementos del AF actual al nuevo listado de nodos
+        for nodeName, node in self.nodes.iteritems():
+            newNodes[nodeName] = node
+
+        # Agregamos los elementos del nodo que se une al nuevo listado de nodos
+        for nodeName, node in af.nodes.iteritems():
+            # Tenemos que reescribir la variable, cuando cambiamos el nombre no cambiamos
+            # el indice en el listado de nodos
+            nodeName = node.getName()
+            newNodes[nodeName] = node
+
+        # Reemplazamos el listado de nodos
+        self.nodes = newNodes
+
+        # Actualizamos el listado de simbolos validos
+        self.updateSymbols()
 
     def __repr__(self):
         return "<AF symbols: '%s', nodes: '\n%s'>" % (self.symbols, self.nodes)
